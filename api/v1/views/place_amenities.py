@@ -35,8 +35,8 @@ def places_id_amenities_id(id, amenity_id):
     """
     place = storage.get(Place, id)
     if (place):
-        amenity = storage.get(Amenity, amenity_id)
-        if storage_t == 'db':
+        if request.method == 'DELETE':
+            amenity = storage.get(Amenity, amenity_id)
             if (amenity):
                 if (amenity in place.amenities):
                     place.amenities.remove(amenity)
@@ -44,6 +44,16 @@ def places_id_amenities_id(id, amenity_id):
                     return {}, 200
                 abort(404)
             abort(404)
-        elif storage_t == 'fs':
-            pass
+        elif request.method == 'POST':
+            amenity = storage.get(Amenity, amenity_id)
+            place = storage.get(Place, id)
+            if (place):
+                if (amenity):
+                    if (amenity not in place.amenities):
+                        place.amenities.append(amenity)
+                        storage.save()
+                        return amenity.to_dict(), 201
+                    abort(404)
+                abort(404)
+            abort(404)
     abort(404)
