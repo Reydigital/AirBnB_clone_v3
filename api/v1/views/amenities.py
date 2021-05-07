@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/python3
 """
     This is the amenities page handler for Flask.
@@ -26,8 +24,7 @@ def amenities():
         if "name" not in kwargs:
             return {"error": "Missing name"}, 400
         new_amnt = Amenity(**kwargs)
-        storage.new(new_amnt)
-        storage.save()
+        new_amnt.save()
         return new_amnt.to_dict(), 201
 
     elif request.method == 'GET':
@@ -44,7 +41,7 @@ def amenities_id(id):
     amnt = storage.get(Amenity, id)
     if (amnt):
         if request.method == 'DELETE':
-            storage.delete(amnt)
+            amnt.delete()
             storage.save()
             return {}, 200
 
@@ -56,6 +53,6 @@ def amenities_id(id):
             for k, v in kwargs.items():
                 if k not in ["id", "created_at", "updated_at"]:
                     setattr(amnt, k, v)
-            storage.save()
+            amnt.save()
         return amnt.to_dict()
     abort(404)

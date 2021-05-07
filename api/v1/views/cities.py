@@ -27,8 +27,7 @@ def states_id_cities(id):
             if "name" not in kwargs:
                 return {"error": "Missing name"}, 400
             new_city = City(state_id=id, **kwargs)
-            storage.new(new_city)
-            storage.save()
+            new_city.save()
             return new_city.to_dict(), 201
 
         elif request.method == 'GET':
@@ -46,7 +45,7 @@ def cities_id(id):
     city = storage.get(City, id)
     if (city):
         if request.method == 'DELETE':
-            storage.delete(city)
+            city.delete()
             storage.save()
             return {}, 200
 
@@ -58,6 +57,6 @@ def cities_id(id):
             for k, v in kwargs.items():
                 if k not in ["id", "state_id", "created_at", "updated_at"]:
                     setattr(city, k, v)
-            storage.save()
+            city.save()
         return city.to_dict()
     abort(404)

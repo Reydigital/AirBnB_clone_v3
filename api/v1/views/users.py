@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/python3
 """
     This is the users page handler for Flask.
@@ -28,8 +26,7 @@ def users():
         if "password" not in kwargs:
             return {"error": "Missing password"}, 400
         new_user = User(**kwargs)
-        storage.new(new_user)
-        storage.save()
+        new_user.save()
         return new_user.to_dict(), 201
 
     elif request.method == 'GET':
@@ -46,7 +43,7 @@ def users_id(id):
     user = storage.get(User, id)
     if (user):
         if request.method == 'DELETE':
-            storage.delete(user)
+            user.delete()
             storage.save()
             return {}, 200
 
@@ -58,6 +55,6 @@ def users_id(id):
             for k, v in kwargs.items():
                 if k not in ["id", "email", "created_at", "updated_at"]:
                     setattr(user, k, v)
-            storage.save()
+            user.save()
         return user.to_dict()
     abort(404)

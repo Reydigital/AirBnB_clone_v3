@@ -24,8 +24,7 @@ def states():
         if "name" not in kwargs:
             return {"error": "Missing name"}, 400
         new_state = State(**kwargs)
-        storage.new(new_state)
-        storage.save()
+        new_state.save()
         return new_state.to_dict(), 201
 
     elif request.method == 'GET':
@@ -42,7 +41,7 @@ def states_id(id):
     state = storage.get(State, id)
     if (state):
         if request.method == 'DELETE':
-            storage.delete(state)
+            state.delete()
             storage.save()
             return {}, 200
 
@@ -54,6 +53,6 @@ def states_id(id):
             for k, v in kwargs.items():
                 if k not in ["id", "created_at", "updated_at"]:
                     setattr(state, k, v)
-            storage.save()
+            state.save()
         return state.to_dict()
     abort(404)
