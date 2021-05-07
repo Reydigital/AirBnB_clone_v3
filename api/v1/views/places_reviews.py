@@ -2,44 +2,53 @@
 """
     This is the places reviews page handler for Flask.
 """
+from api.v1.views.places import places_id
 from api.v1.views import app_views
 from models import storage
 from flask import abort, jsonify, request
 
+from models.place import Place
+from models.review import Review
 from models.user import User
 
 
-@app_views.route('/users', methods=['GET', 'POST'])
-def users():
+@app_views.route('/places/<id>/reviews', methods=['GET', 'POST'])
+def places_id_reviews(id):
     """
-        Flask route at /users.
+        Flask route at /places/<id>/reviews.
     """
-    if request.method == 'POST':
-        try:
-            kwargs = request.get_json()
-        except:
-            return {"error": "Not a JSON"}, 400
-        if "email" not in kwargs:
-            return {"error": "Missing email"}, 400
-        if "password" not in kwargs:
-            return {"error": "Missing password"}, 400
-        new_user = User(**kwargs)
-        new_user.save()
-        return new_user.to_dict(), 201
+    place = storage.get(Place, id)
+    if (place):
+        if request.method == 'POST':
+            try:
+                kwargs = request.get_json()
+            except:
+                return {"error": "Not a JSON"}, 400
+            if "user_id" not in kwargs:
+                return {"error": "Missing user_id"}, 400
 
-    elif request.method == 'GET':
-        return jsonify([u.to_dict() for u in storage.all("User").values()])
+            user = storage.get(User, kwargs.get("user_id", None))
+            if (user):
+                if "text" not in kwargs:
+                    return {"error": "Missing text"}, 400
+                new_review = Review(place_id=id, **kwargs)
+                new_review.save()
+                return new_review.to_dict(), 201
+
+        elif request.method == 'GET':
+            return jsonify([r.to_dict() for r in place.reviews])
+    abort(404)
 
 
-@app_views.route('/users/<id>', methods=['GET', 'DELETE', 'PUT'])
-def users_id(id):
+@app_views.route('/reviews/<id>', methods=['GET', 'DELETE', 'PUT'])
+def reviews_id(id):
     """
-        Flask route at /users/<id>.
+        Flask route at /reviews/<id>.
     """
-    user = storage.get(User, id)
-    if (user):
+    review = storage.get(Review, id)
+    if (review):
         if request.method == 'DELETE':
-            user.delete()
+            review.delete()
             storage.save()
             return {}, 200
 
@@ -49,8 +58,9 @@ def users_id(id):
             except:
                 return {"error": "Not a JSON"}, 400
             for k, v in kwargs.items():
-                if k not in ["id", "email", "created_at", "updated_at"]:
-                    setattr(user, k, v)
-            user.save()
-        return user.to_dict()
+                if k not in ["id", "user_id", "place_id",
+                             "created_at", "updated_at"]:
+                    setattr(review, k, v)
+            review.save()
+        return review.to_dict()
     abort(404)
