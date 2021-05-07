@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-    This is the users page handler for Flask.
+    This is the places reviews page handler for Flask.
 """
 from api.v1.views import app_views
 from models import storage

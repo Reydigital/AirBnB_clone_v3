@@ -9,10 +9,8 @@ from flask import abort, jsonify, request
 from models.city import City
 from models.state import State
 
-cities_m = ['GET', 'POST']
 
-
-@app_views.route('/states/<id>/cities', methods=cities_m, strict_slashes=False)
+@app_views.route('/states/<id>/cities', methods=['GET', 'POST'])
 def states_id_cities(id):
     """
         Flask route at /states/<id>/cities.
@@ -34,10 +32,8 @@ def states_id_cities(id):
             return jsonify([c.to_dict() for c in state.cities])
     abort(404)
 
-cities_id_m = ['GET', 'DELETE', 'PUT']
 
-
-@app_views.route('/cities/<id>', methods=cities_id_m, strict_slashes=False)
+@app_views.route('/cities/<id>', methods=['GET', 'DELETE', 'PUT'])
 def cities_id(id):
     """
         Flask route at /cities/<id>.

@@ -10,10 +10,8 @@ from models.city import City
 from models.place import Place
 from models.user import User
 
-places_m = ['GET', 'POST']
 
-
-@app_views.route('/cities/<id>/places', methods=places_m, strict_slashes=False)
+@app_views.route('/cities/<id>/places', methods=['GET', 'POST'])
 def cities_id_places(id):
     """
         Flask route at /cities/<id>/places.
@@ -40,10 +38,8 @@ def cities_id_places(id):
             return jsonify([p.to_dict() for p in city.places])
     abort(404)
 
-places_id_m = ['GET', 'DELETE', 'PUT']
 
-
-@app_views.route('/places/<id>', methods=places_id_m, strict_slashes=False)
+@app_views.route('/places/<id>', methods=['GET', 'DELETE', 'PUT'])
 def places_id(id):
     """
         Flask route at /places/<id>.

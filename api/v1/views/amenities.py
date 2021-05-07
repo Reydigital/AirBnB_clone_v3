@@ -8,10 +8,8 @@ from flask import abort, jsonify, request
 
 from models.amenity import Amenity
 
-amnt_m = ['GET', 'POST']
 
-
-@app_views.route('/amenities', methods=amnt_m, strict_slashes=False)
+@app_views.route('/amenities', methods=['GET', 'POST'])
 def amenities():
     """
         Flask route at /amenities.
@@ -30,10 +28,8 @@ def amenities():
     elif request.method == 'GET':
         return jsonify([a.to_dict() for a in storage.all("Amenity").values()])
 
-amnt_id_m = ['GET', 'DELETE', 'PUT']
 
-
-@app_views.route('/amenities/<id>', methods=amnt_id_m, strict_slashes=False)
+@app_views.route('/amenities/<id>', methods=['GET', 'DELETE', 'PUT'])
 def amenities_id(id):
     """
         Flask route at /amenities/<id>.

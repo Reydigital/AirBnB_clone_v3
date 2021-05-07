@@ -13,7 +13,7 @@ classes = {"amenities": "Amenity",
            "users": "User"}
 
 
-@app_views.route('/status', strict_slashes=False)
+@app_views.route('/status')
 def status():
     """
         Flask route at /status.
@@ -22,7 +22,7 @@ def status():
     return {"status": "OK"}
 
 
-@app_views.route('/stats', strict_slashes=False)
+@app_views.route('/stats')
 def stats():
     """
         Flask route at /stats.

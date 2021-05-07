@@ -8,10 +8,8 @@ from flask import abort, jsonify, request
 
 from models.state import State
 
-states_m = ['GET', 'POST']
 
-
-@app_views.route('/states', methods=states_m, strict_slashes=False)
+@app_views.route('/states', methods=['GET', 'POST'])
 def states():
     """
         Flask route at /states.
@@ -30,10 +28,8 @@ def states():
     elif request.method == 'GET':
         return jsonify([o.to_dict() for o in storage.all("State").values()])
 
-states_id_m = ['GET', 'DELETE', 'PUT']
 
-
-@app_views.route('/states/<id>', methods=states_id_m, strict_slashes=False)
+@app_views.route('/states/<id>', methods=['GET', 'DELETE', 'PUT'])
 def states_id(id):
     """
         Flask route at /states/<id>.
