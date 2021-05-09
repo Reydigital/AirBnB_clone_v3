@@ -28,15 +28,15 @@ def places_id_amenities(id):
     abort(404)
 
 
-@app_views.route('/places/<id>/amenities/<amenity_id>', methods=['DELETE', 'POST'])
-def places_id_amenities_id(id, amenity_id):
+@app_views.route('/places/<id>/amenities/<am_id>', methods=['DELETE', 'POST'])
+def places_id_amenities_id(id, am_id):
     """
-        Flask route at /places/<id>/amenities/<amenity_id>.
+        Flask route at /places/<id>/amenities/<am_id>.
     """
     place = storage.get(Place, id)
     if (place):
         if request.method == 'DELETE':
-            amenity = storage.get(Amenity, amenity_id)
+            amenity = storage.get(Amenity, am_id)
             if (amenity):
                 if storage_t == 'db':
                     if (amenity in place.amenities):
@@ -45,14 +45,14 @@ def places_id_amenities_id(id, amenity_id):
                         return {}, 200
                     abort(404)
                 elif storage_t == 'fs':
-                    if (amenity_id in place.amenity_ids):
-                        place.amenity_ids.remove(amenity_id)
+                    if (am_id in place.amenity_ids):
+                        place.amenity_ids.remove(am_id)
                         storage.save()
                         return {}, 200
                     abort(404)
             abort(404)
         elif request.method == 'POST':
-            amenity = storage.get(Amenity, amenity_id)
+            amenity = storage.get(Amenity, am_id)
             place = storage.get(Place, id)
             if (place):
                 if (amenity):
@@ -62,8 +62,8 @@ def places_id_amenities_id(id, amenity_id):
                             storage.save()
                             return amenity.to_dict(), 201
                     elif storage_t == 'fs':
-                        if (amenity_id not in place.amenity_ids):
-                            place.amenity_ids.append(amenity_id)
+                        if (am_id not in place.amenity_ids):
+                            place.amenity_ids.append(am_id)
                             storage.save()
                             return amenity.to_dict(), 200
                     abort(404)
