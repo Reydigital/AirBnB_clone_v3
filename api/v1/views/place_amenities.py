@@ -24,7 +24,7 @@ def places_id_amenities(id):
         if storage_t == 'db':
             return jsonify([r.to_dict() for r in place.amenities])
         elif storage_t == 'fs':
-            pass
+            return jsonify(place.to_dict()["amenity_ids"])
     abort(404)
 
 
@@ -38,11 +38,18 @@ def places_id_amenities_id(id, amenity_id):
         if request.method == 'DELETE':
             amenity = storage.get(Amenity, amenity_id)
             if (amenity):
-                if (amenity in place.amenities):
-                    place.amenities.remove(amenity)
-                    storage.save()
-                    return {}, 200
-                abort(404)
+                if storage_t == 'db':
+                    if (amenity in place.amenities):
+                        place.amenities.remove(amenity)
+                        storage.save()
+                        return {}, 200
+                    abort(404)
+                elif storage_t == 'fs':
+                    if (amenity_id in place.amenity_ids):
+                        place.amenity_ids.remove(amenity_id)
+                        storage.save()
+                        return {}, 200
+                    abort(404)
             abort(404)
         elif request.method == 'POST':
             amenity = storage.get(Amenity, amenity_id)
