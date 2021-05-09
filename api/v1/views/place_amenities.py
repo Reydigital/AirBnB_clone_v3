@@ -56,10 +56,16 @@ def places_id_amenities_id(id, amenity_id):
             place = storage.get(Place, id)
             if (place):
                 if (amenity):
-                    if (amenity not in place.amenities):
-                        place.amenities.append(amenity)
-                        storage.save()
-                        return amenity.to_dict(), 201
+                    if storage_t == 'db':
+                        if (amenity not in place.amenities):
+                            place.amenities.append(amenity)
+                            storage.save()
+                            return amenity.to_dict(), 201
+                    elif storage_t == 'fs':
+                        if (amenity_id not in place.amenity_ids):
+                            place.amenity_ids.append(amenity_id)
+                            storage.save()
+                            return amenity.to_dict(), 200
                     abort(404)
                 abort(404)
             abort(404)
