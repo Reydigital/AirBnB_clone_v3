@@ -21,9 +21,8 @@ def cities_id_places(id):
     city = storage.get(City, id)
     if (city):
         if request.method == 'POST':
-            try:
-                kwargs = request.get_json()
-            except:
+            kwargs = request.get_json()
+            if not kwargs:
                 return {"error": "Not a JSON"}, 400
             if "user_id" not in kwargs:
                 return {"error": "Missing user_id"}, 400
@@ -54,9 +53,8 @@ def places_id(id):
             return {}, 200
 
         elif request.method == 'PUT':
-            try:
-                kwargs = request.get_json()
-            except:
+            kwargs = request.get_json()
+            if not kwargs:
                 return {"error": "Not a JSON"}, 400
             for k, v in kwargs.items():
                 if k not in ["id", "user_id", "city_id",
@@ -72,9 +70,8 @@ def places_search():
     """
         Flask route at /places_search
     """
-    try:
-        kwargs = request.get_json()
-    except:
+    kwargs = request.get_json()
+    if not kwargs:
         return {"error": "Not a JSON"}, 400
     states = kwargs.get('states', [])
     cities = kwargs.get('cities', [])
